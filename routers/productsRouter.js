@@ -1,11 +1,8 @@
 const router = require('express').Router();
+const { getAll, getById } = require('../controllers/productsController');
 
-router.post('/');
+router.get('/', getAll);
 
-router.get('/');
-
-router.put('/');
-
-router.delete('/');
+router.get('/:id', getById);
 
 module.exports = router;
