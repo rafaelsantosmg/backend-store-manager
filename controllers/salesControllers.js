@@ -15,7 +15,19 @@ const getById = rescue(async (req, res) => {
   return res.status(200).json(sale);
 });
 
+const create = rescue(async (req, _res) => {
+  const { productId, quantity } = req.body[0];
+  return console.log(productId, quantity);
+});
+
+const update = rescue(async (req, _res) => {
+  const { productId, quantity } = req.body[0];
+  return console.log(productId, quantity);
+});
+
 module.exports = {
   getAll,
   getById,
+  create,
+  update,
 };
