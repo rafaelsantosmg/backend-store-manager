@@ -48,6 +48,13 @@ const update = async ({ name, quantity, id }) => {
   return id;
 };
 
+const destroyer = async ({ id }) => {
+  await connection.execute(`
+  DELETE FROM products
+  WHERE id = ?`,
+  [id]);
+};
+
 module.exports = {
   getFindName,
   getFindId,
@@ -55,4 +62,5 @@ module.exports = {
   getById,
   create,
   update,
+  destroyer,
 };

@@ -33,9 +33,19 @@ const update = async (req, res) => {
   return res.status(200).json(product[0]);
 };
 
+const destroyer = async (req, res) => {
+  const { id } = req.params;
+  const product = await ProductsService.destroyer({ id: Number(id) });
+  if (product !== undefined && product.length === 0) {
+    return res.status(404).json({ message: 'Product not found' });
+  }
+  return res.status(204).end();
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
+  destroyer,
 };
