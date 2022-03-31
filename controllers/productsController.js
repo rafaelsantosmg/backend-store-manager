@@ -17,16 +17,20 @@ const getById = async (req, res) => {
 const create = async (req, res) => {
   const { name, quantity } = req.body;
   const product = await ProductsService.create({ name, quantity });
-  console.log(product);
   if (product !== undefined && product.length === 0) {
     return res.status(409).json({ message: 'Product already exists' });
   }
   return res.status(201).json({ id: product[0], name, quantity });
 };
 
-const update = async (req, _res) => {
+const update = async (req, res) => {
+  const { id } = req.params;
   const { name, quantity } = req.body;
-  return console.log(name, quantity);
+  const product = await ProductsService.update({ name, quantity, id: Number(id) });
+  if (product !== undefined && product.length === 0) {
+    return res.status(404).json({ message: 'Product not found' });
+  }
+  return res.status(200).json(product[0]);
 };
 
 module.exports = {

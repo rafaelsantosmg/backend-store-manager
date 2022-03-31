@@ -13,6 +13,6 @@ router.get('/:id', rescue(getById));
 
 router.post('/', validProducts, rescue(create));
 
-router.put('/:id', rescue(validProducts, update));
+router.put('/:id', validProducts, rescue(update));
 
 module.exports = router;

@@ -1,12 +1,20 @@
 const connection = require('./connection');
 
-const getFind = async (name) => {
-  const [product] = await connection.execute(`
+const getFindName = async (name) => {
+  const [productName] = await connection.execute(`
   SELECT name FROM products
   WHERE name = ?`,
   [name]);
-  return product;
+  return productName;
 };
+
+const getFindId = async (id) => {
+  const [productId] = await connection.execute(`
+  SELECT id FROM products
+  WHERE id = ?`,
+  [id]);
+  return productId;
+}; 
 
 const getAll = async () => {
   const [products] = await connection.execute(`
@@ -31,9 +39,20 @@ const create = async ({ name, quantity }) => {
   return product;
 };
 
+const update = async ({ name, quantity, id }) => {
+  await connection.execute(`
+  UPDATE products
+  SET name = ?, quantity = ?
+  WHERE id = ?`,
+  [name, quantity, id]);
+  return id;
+};
+
 module.exports = {
-  getFind,
+  getFindName,
+  getFindId,
   getAll,
   getById,
   create,
+  update,
 };

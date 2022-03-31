@@ -11,15 +11,22 @@ const getById = async (id) => {
 };
 
 const create = async ({ name, quantity }) => {
-  const [findProduct] = await ProductsModel.getFind(name);
-  console.log(findProduct);
+  const [findProduct] = await ProductsModel.getFindName(name);
   if (findProduct !== undefined && findProduct.name === name) return [];
   const { insertId } = await ProductsModel.create({ name, quantity });
   return [insertId];
+};
+
+const update = async ({ name, quantity, id }) => {
+  const findProductId = await ProductsModel.getFindId(id);
+  if (findProductId !== undefined && findProductId.length === 0) return [];
+  await ProductsModel.update({ name, quantity, id });
+  return [{ id, name, quantity }];
 };
 
 module.exports = {
   getAll,
   getById,
   create,
+  update,
 };
