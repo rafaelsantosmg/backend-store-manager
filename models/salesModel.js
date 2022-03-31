@@ -10,8 +10,8 @@ const serialize = (data) => (
 
 const getAll = async () => {
   const [sales] = await connection.execute(`
-  SELECT sp.sale_id, s.date, sp.product_id, sp.quantity FROM sales s
-  INNER JOIN sales_products sp
+  SELECT sp.sale_id, s.date, sp.product_id, sp.quantity FROM StoreManager.sales s
+  INNER JOIN StoreManager.sales_products sp
   ON s.id = sp.sale_id
   ORDER BY sp.sale_id, s.id;
   `);
@@ -20,8 +20,8 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const [sale] = await connection.execute(`
-  SELECT s.date, sp.product_id, sp.quantity FROM sales s
-  INNER JOIN sales_products sp
+  SELECT s.date, sp.product_id, sp.quantity FROM StoreManager.sales s
+  INNER JOIN StoreManager.sales_products sp
   ON s.id = sp.sale_id
   WHERE s.id = ?
   ORDER BY sp.sale_id, sp.product_id;
