@@ -10,7 +10,13 @@ const getById = async (id) => {
   return sale;
 };
 
+const create = async (sales) => {
+  const sale = SalesModel.create(sales);
+  return sale;
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };

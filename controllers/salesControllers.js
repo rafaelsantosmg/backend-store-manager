@@ -15,14 +15,14 @@ const getById = rescue(async (req, res) => {
   return res.status(200).json(sale);
 });
 
-const create = rescue(async (req, _res) => {
-  const { productId, quantity } = req.body[0];
-  return console.log(productId, quantity);
+const create = rescue(async (req, res) => {
+  const sale = await SalesService.create(req.body);
+  return res.status(201).json(sale);
 });
 
-const update = rescue(async (req, _res) => {
-  const { productId, quantity } = req.body[0];
-  return console.log(productId, quantity);
+const update = rescue(async (_req, _res) => {
+  // const { productId, quantity } = req.body[0];
+  // const sales = await SalesService.create(req.body);
 });
 
 module.exports = {
