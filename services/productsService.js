@@ -10,7 +10,16 @@ const getById = async (id) => {
   return product;
 };
 
+const create = async ({ name, quantity }) => {
+  const [findProduct] = await ProductsModel.getFind(name);
+  console.log(findProduct);
+  if (findProduct !== undefined && findProduct.name === name) return [];
+  const { insertId } = await ProductsModel.create({ name, quantity });
+  return [insertId];
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };
