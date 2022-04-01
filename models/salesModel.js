@@ -11,7 +11,7 @@ const serialize = (data) => (
 const getAll = async () => {
   const [sales] = await connection.execute(`
   SELECT sp.sale_id, s.date, sp.product_id, sp.quantity FROM StoreManager.sales s
-  INNER JOIN StoreManager.sales_products sp
+  INNER JOIN sales_products sp
   ON s.id = sp.sale_id
   ORDER BY sp.sale_id, s.id;
   `);
@@ -21,29 +21,45 @@ const getAll = async () => {
 const getById = async (id) => {
   const [sale] = await connection.execute(`
   SELECT s.date, sp.product_id, sp.quantity FROM StoreManager.sales s
-  INNER JOIN StoreManager.sales_products sp
+  INNER JOIN sales_products sp
   ON s.id = sp.sale_id
   WHERE s.id = ?
   ORDER BY sp.sale_id, sp.product_id;
   `,
-  [id]);
+    [id]);
   return sale.map(serialize);
 };
 
 const create = async (sales) => {
-  const result = [];
+  const itemsSold = [];
   const [{ insertId }] = await connection.execute(`
   INSERT INTO sales (date) VALUES (NOW())`);
   await sales.forEach(({ productId, quantity }) => {
-    result.push({ productId, quantity });
+    itemsSold.push({ productId, quantity });
     connection.execute(`
   INSERT INTO sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?)
   `,
-      [insertId, productId, quantity]);
+    [insertId, productId, quantity]);
   });
   return {
     id: insertId,
-    itemsSold: result,
+    itemsSold,
+  };
+};
+
+const update = async ({ id, productId, quantity }) => {
+  await connection.execute(`
+  UPDATE sales SET date = NOW()
+  WHERE id = ?`,
+    [id]);
+  await connection.execute(`
+  UPDATE sales_products
+  SET product_id = ?, quantity = ?
+  WHERE sale_id = ?`,
+    [productId, quantity, id]);
+  return {
+    saleId: id,
+    itemUpdated: [{ productId, quantity }],
   };
 };
 
@@ -51,4 +67,5 @@ module.exports = {
   getAll,
   getById,
   create,
+  update,
 };

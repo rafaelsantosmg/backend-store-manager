@@ -20,9 +20,12 @@ const create = rescue(async (req, res) => {
   return res.status(201).json(sale);
 });
 
-const update = rescue(async (_req, _res) => {
-  // const { productId, quantity } = req.body[0];
-  // const sales = await SalesService.create(req.body);
+const update = rescue(async (req, res) => {
+  const { id } = req.params;
+  const { productId, quantity } = req.body[0];
+  const sale = await SalesService
+    .update({ id: Number(id), productId, quantity });
+  return res.status(200).json(sale);
 });
 
 module.exports = {
