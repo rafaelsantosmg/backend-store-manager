@@ -20,9 +20,16 @@ const update = async ({ id, productId, quantity }) => {
   return sale;
 };
 
+const destroyer = async ({ id }) => {
+  const findSaleId = await SalesModel.getFindId(id);
+  if (findSaleId !== undefined && findSaleId.length === 0) return [];
+  await SalesModel.destroyer({ id });
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
+  destroyer,
 };

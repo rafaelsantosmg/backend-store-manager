@@ -8,9 +8,22 @@ const serialize = (data) => (
     quantity: data.quantity,
   });
 
+  const getFindId = async (id) => {
+    const [saleId] = await connection.execute(`
+    SELECT id FROM sales
+    WHERE id = ?`,
+      [id]);
+    await connection.execute(`
+    SELECT sale_id FROM sales_products
+    WHERE sale_id = ?`,
+    [id]);
+    return saleId;
+  };
+
 const getAll = async () => {
   const [sales] = await connection.execute(`
-  SELECT sp.sale_id, s.date, sp.product_id, sp.quantity FROM StoreManager.sales s
+  SELECT sp.sale_id, s.date, sp.product_id, sp.quantity
+  FROM StoreManager.sales s
   INNER JOIN sales_products sp
   ON s.id = sp.sale_id
   ORDER BY sp.sale_id, s.id;
@@ -37,7 +50,8 @@ const create = async (sales) => {
   await sales.forEach(({ productId, quantity }) => {
     itemsSold.push({ productId, quantity });
     connection.execute(`
-  INSERT INTO sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?)
+  INSERT INTO sales_products (sale_id, product_id, quantity)
+  VALUES (?, ?, ?)
   `,
     [insertId, productId, quantity]);
   });
@@ -63,9 +77,22 @@ const update = async ({ id, productId, quantity }) => {
   };
 };
 
+const destroyer = async ({ id }) => {
+  await connection.execute(`
+  DELETE FROM sales_products
+  WHERE sale_id = ?`,
+  [id]);
+  await connection.execute(`
+  DELETE FROM sales
+  WHERE id = ?`,
+  [id]);
+};
+
 module.exports = {
+  getFindId,
   getAll,
   getById,
   create,
   update,
+  destroyer,
 };
