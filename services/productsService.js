@@ -6,7 +6,7 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const product = await ProductsModel.getById(id);
+  const [product] = await ProductsModel.getById(id);
   return product;
 };
 

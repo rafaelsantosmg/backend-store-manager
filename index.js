@@ -1,8 +1,8 @@
+require('dotenv').config();
 const express = require('express');
 const productsRouter = require('./routers/productsRouter');
 const salesRouter = require('./routers/salesRouter');
 const handleError = require('./middlewares/handleError');
-require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
 

@@ -46,14 +46,53 @@ describe("Products Model", () => {
 
   describe('Deleta um produtos', () => {
     before(() => {
-      sinon.stub(connection, 'execute').resolves([{ id: 1 }]);
+      sinon.stub(connection, 'execute').resolves([mocks.deleteProducts]);
     });
     after(() => {
       connection.execute.restore();
     });
-    it('Valida se todos os produtos estão sendo retornados', async () => {
-      const { id } = await ProductsModel.destroyer({ id: 1 });
+    it('Valida se produto foi deletado corretamente', async () => {
+      const id = await ProductsModel.destroyer({ id: 1 });
       expect(id).to.be.equal(1);
+    });
+  });
+
+  describe('Busca um produto por id', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([mocks.findProductId]);
+    });
+    after(() => {
+      connection.execute.restore();
+    });
+    it('Valida se produto foi deletado corretamente', async () => {
+      const result = await ProductsModel.getFindId(1);
+      expect(result).to.deep.equal(mocks.findProductId);
+    });
+  });
+
+  describe('Busca um produto por name', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([mocks.findProductName]);
+    });
+    after(() => {
+      connection.execute.restore();
+    });
+    it('Valida se produto foi deletado corretamente', async () => {
+      const result = await ProductsModel.getFindName('Armadura do Homem de Ferro');
+      expect(result).to.deep.equal(mocks.findProductName);
+    });
+  });
+
+  describe('Busca um produto por id e exibe todas as colunas', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([mocks.getProductById]);
+    });
+    after(() => {
+      connection.execute.restore();
+    });
+    it('Valida se produto foi deletado corretamente', async () => {
+      const result = await ProductsModel.getById(1);
+      expect(result).to.deep.equal(mocks.getProductById);
     });
   });
 });

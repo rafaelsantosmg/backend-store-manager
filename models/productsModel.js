@@ -28,7 +28,7 @@ const getById = async (id) => {
   SELECT * FROM products
   WHERE id = ?`,
   [id]);
-  return product[0];
+  return product;
 };
 
 const create = async ({ name, quantity }) => {
@@ -52,7 +52,7 @@ const destroyer = async ({ id }) => {
   const [product] = await connection.execute(`
   DELETE FROM products
   WHERE id = ?`,
-    [id]);
+  [id]);
   return product;
 };
 
