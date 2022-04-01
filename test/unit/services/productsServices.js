@@ -136,7 +136,6 @@ describe('Service - Rota "/products"', () => {
     
       it('Valida se deleta o produto', async () => {
         const id = await ProductsService.destroyer({ id: 1 });
-        console.log(id);
         expect(id).to.deep.equal(mocks.deleteProducts);
       });
     });

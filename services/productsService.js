@@ -19,14 +19,14 @@ const create = async ({ name, quantity }) => {
 
 const update = async ({ name, quantity, id }) => {
   const findProductId = await ProductsModel.getFindId(id);
-  if (!findProductId) return [];
+  if (findProductId !== undefined && findProductId.length === 0) return [];
   await ProductsModel.update({ name, quantity, id });
   return [{ id, name, quantity }];
 };
 
 const destroyer = async ({ id }) => {
   const findProductId = await ProductsModel.getFindId(id);
-  if (!findProductId) return [];
+  if (findProductId !== undefined && findProductId.length === 0) return [];
   await ProductsModel.destroyer({ id });
   return id;
 };
