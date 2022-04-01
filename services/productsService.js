@@ -12,22 +12,23 @@ const getById = async (id) => {
 
 const create = async ({ name, quantity }) => {
   const [findProduct] = await ProductsModel.getFindName(name);
-  if (findProduct !== undefined && findProduct.name === name) return [];
+  if (findProduct) return [];
   const { insertId } = await ProductsModel.create({ name, quantity });
   return [insertId];
 };
 
 const update = async ({ name, quantity, id }) => {
   const findProductId = await ProductsModel.getFindId(id);
-  if (findProductId !== undefined && findProductId.length === 0) return [];
+  if (!findProductId) return [];
   await ProductsModel.update({ name, quantity, id });
   return [{ id, name, quantity }];
 };
 
 const destroyer = async ({ id }) => {
   const findProductId = await ProductsModel.getFindId(id);
-  if (findProductId !== undefined && findProductId.length === 0) return [];
+  if (!findProductId) return [];
   await ProductsModel.destroyer({ id });
+  return id;
 };
 
 module.exports = {
