@@ -49,10 +49,11 @@ const update = async ({ name, quantity, id }) => {
 };
 
 const destroyer = async ({ id }) => {
-  await connection.execute(`
+  const [product] = await connection.execute(`
   DELETE FROM products
   WHERE id = ?`,
-  [id]);
+    [id]);
+  return product;
 };
 
 module.exports = {

@@ -1,41 +1,59 @@
 const { expect } = require('chai');
-const sinon = require('sinon')
+const sinon = require('sinon');
+const connection = require('../../../models/connection');
+const ProductsModel = require('../../../models/productsModel')
+const mocks = require('../helpers/mocks');
 
-const connection = require('../../../models/connection')
-
-const ProductsModel = {
-  create: () => {}
-};
-
-describe('Insere um novo produto no BD', () => {
-  const payloadProduct = {
-    id: 4,
-    name: 'Armadura Homem de ferro',
-    quantity: 2,
-  };
-
-  before(async () => {
-    const execute = [{ insertId: 1 }];
-    sinon.stub(connection, 'execute').resolves(execute);
+describe("Products Model", () => {
+  describe("Inserir um produto na tabela products", () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([{ insertId: 1 }]);
+    });
+    after(() => {
+      connection.execute.restore();
+    });
+    it("Valida se produto foi inserido", async () => {
+      const { insertId } = await ProductsModel.create(mocks.createProduct);
+      expect(insertId).to.be.equal(1);
+    });
+  });
+  
+  describe('Retornar todo os produtos', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([mocks.allProducts]);
+    });
+    after(() => {
+      connection.execute.restore();
+    });
+    it('Valida se todos os produtos estão sendo retornados', async () => {
+      const products = await ProductsModel.getAll();
+      expect(products).to.be.equal(mocks.allProducts);
+    });
   });
 
-  after(async () => {
-    connection.execute.restore();
+  describe('Atualiza um produtos', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([mocks.updateProduct]);
+    });
+    after(() => {
+      connection.execute.restore();
+    });
+    it('Valida se todos os produtos estão sendo retornados', async () => {
+      const id = await ProductsModel.update(mocks.updateProduct);
+      expect(id).to.be.equal(1);
+    });
   });
 
-  describe('quando é inserido com sucesso', () => {
-
-    it('retorna um objeto', async () => {
-      const response = await ProductsModel.create(payloadProduct);
-
-      expect(response).to.be.a('object')
+  describe('Deleta um produtos', () => {
+    before(() => {
+      sinon.stub(connection, 'execute').resolves([{ id: 1 }]);
     });
-
-    it('tal objeto possui o "id" do novo filme inserido', async () => {
-      const response = await ProductsModel.create(payloadProduct);
-
-      expect(response).to.have.a.property('id')
+    after(() => {
+      connection.execute.restore();
     });
-
+    it('Valida se todos os produtos estão sendo retornados', async () => {
+      const { id } = await ProductsModel.destroyer({ id: 1 });
+      expect(id).to.be.equal(1);
+    });
   });
 });
