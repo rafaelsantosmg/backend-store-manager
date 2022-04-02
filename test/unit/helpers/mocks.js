@@ -130,6 +130,13 @@ const updateSaleDB = [
   },
 ];
 
+const updateSaleReq = [
+  {
+    productId: 1,
+    quantity: 6
+  }
+];
+
 const updateSale = {
   id: 1,
   productId: 1,
@@ -167,6 +174,7 @@ module.exports = {
   salesDBUpdate,
   createSale,
   updateSale,
+  updateSaleReq,
   updateSaleDB,
   deleteSale,
   getFindById,
