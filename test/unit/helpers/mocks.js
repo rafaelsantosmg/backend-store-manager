@@ -23,6 +23,12 @@ const findProductId = {
   quantity: 10,
 }
 
+const createProductSucess = {
+  id: 1,
+  name: "Martelo de Thor",
+  quantity: 10,
+};
+
 const createProduct = {
   name: "Martelo de Thor",
   quantity: 10,
@@ -34,8 +40,13 @@ const getProductById = {
   quantity: 5,
 };
 
+const updateProductReq = {
+  name: "Armadura do Homem de Ferro",
+  quantity: 5,
+};
+
 const updateProduct = {
-  id: 1,
+  id: 2,
   name: "Armadura do Homem de Ferro",
   quantity: 5,
 };
@@ -145,8 +156,10 @@ module.exports = {
   getProductById,
   findProductName,
   allProducts,
+  createProductSucess,
   createProduct,
   updateProduct,
+  updateProductReq,
   deleteProducts,
   sale,
   salesDB,

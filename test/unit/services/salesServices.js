@@ -6,19 +6,17 @@ const mocks = require('../helpers/mocks');
 
 describe('Service - Rota "/products"', () => {
   describe('Valida a função create', () => {
-    describe('Valida se produto é criado!', () => {
-      before(() => {
-        sinon.stub(salesModel, 'create').resolves(mocks.sale);
-      })
-    
-      after(() => {
-        salesModel.create.restore();
-      })
-    
-      it('Valida se cria o produto', async () => {
-        const result = await salesService.create(mocks.createSale);
-        expect(result).to.deep.equal(mocks.sale);
-      });
+    before(() => {
+      sinon.stub(salesModel, 'create').resolves(mocks.sale);
+    })
+  
+    after(() => {
+      salesModel.create.restore();
+    })
+  
+    it('Valida se cria a venda', async () => {
+      const result = await salesService.create(mocks.createSale);
+      expect(result).to.deep.equal(mocks.sale);
     });
   });
 
@@ -32,7 +30,7 @@ describe('Service - Rota "/products"', () => {
         salesModel.getAll.restore();
       })
     
-      it('Valida o retorno dos produtos', async () => {
+      it('Valida o retorno ddas vendas', async () => {
         const result = await salesService.getAll();
         expect(result).to.deep.equal(mocks.sales);
       });
@@ -54,19 +52,17 @@ describe('Service - Rota "/products"', () => {
   });
 
   describe('Valida a função update', () => {
-    describe('Valida se produto é atualizado!', () => {
-      before(() => {
-        sinon.stub(salesModel, 'update').resolves(mocks.salesDBUpdate);
-      })
-    
-      after(() => {
-        salesModel.update.restore();
-      })
-    
-      it('Valida se atualiza o produto', async () => {
-        const result = await salesService.update(mocks.updateSale);
-        expect(result).to.deep.equal(mocks.salesDBUpdate);
-      });
+    before(() => {
+      sinon.stub(salesModel, 'update').resolves(mocks.salesDBUpdate);
+    })
+  
+    after(() => {
+      salesModel.update.restore();
+    })
+  
+    it('Valida se atualiza o produto', async () => {
+      const result = await salesService.update(mocks.updateSale);
+      expect(result).to.deep.equal(mocks.salesDBUpdate);
     });
   });
 
