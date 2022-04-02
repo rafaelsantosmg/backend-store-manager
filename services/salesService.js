@@ -1,4 +1,5 @@
 const SalesModel = require('../models/salesModel');
+const ProductsModel = require('../models/productsModel');
 
 const getAll = async () => {
   const sales = await SalesModel.getAll();
@@ -11,8 +12,13 @@ const getById = async (id) => {
 };
 
 const create = async (sales) => {
-  const sale = SalesModel.create(sales);
-  return sale;
+  const createSale = SalesModel.create(sales);
+  sales.forEach(async (sale) => {
+    const [product] = await ProductsModel.getById(sale.productId);
+    product.quantity -= sale.quantity;
+    await ProductsModel.update(product);
+  });
+  return createSale;
 };
 
 const update = async ({ id, productId, quantity }) => {
@@ -23,6 +29,12 @@ const update = async ({ id, productId, quantity }) => {
 const destroyer = async ({ id }) => {
   const findSaleId = await SalesModel.getFindId(id);
   if (findSaleId !== undefined && findSaleId.length === 0) return [];
+  const sales = await SalesModel.getById(id);
+  sales.forEach(async (sale) => {
+    const [product] = await ProductsModel.getById(sale.productId);
+    product.quantity += sale.quantity;
+    await ProductsModel.update(product);
+  });
   await SalesModel.destroyer({ id });
   return id;
 };

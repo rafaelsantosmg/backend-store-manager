@@ -57,10 +57,9 @@ const create = async (sales) => {
   await sales.forEach(({ productId, quantity }) => {
     itemsSold.push({ productId, quantity });
     connection.execute(`
-  INSERT INTO sales_products (sale_id, product_id, quantity)
-  VALUES (?, ?, ?)
-  `,
-    [insertId, productId, quantity]);
+      INSERT INTO sales_products (sale_id, product_id, quantity)
+      VALUES (?, ?, ?)`,
+      [insertId, productId, quantity]);
   });
   return {
     id: insertId,
