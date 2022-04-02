@@ -74,7 +74,7 @@ describe('Service - Rota "/products"', () => {
   describe('Valida a função update', () => {
     describe('Valida se existe um produto com mesmo id', () => {
       before(() => {
-        sinon.stub(ProductsModel, 'update').resolves(1);
+        sinon.stub(ProductsModel, 'update').resolves({insertId: 2});
         sinon.stub(ProductsModel, 'getFindId').resolves(mocks.updateProduct.id);
       })
     
@@ -85,7 +85,7 @@ describe('Service - Rota "/products"', () => {
     
       it('Valida se id ja existe', async () => {
         const [{ id }] = await ProductsService.update(mocks.updateProduct);
-        expect(id).to.deep.equal(1);
+        expect(id).to.deep.equal(2);
       });
     });
     describe('Valida se produto é atualizado!', () => {

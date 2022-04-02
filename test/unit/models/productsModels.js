@@ -38,9 +38,9 @@ describe("Products Model", () => {
     after(() => {
       connection.execute.restore();
     });
-    it('Valida se todos os produtos estão sendo retornados', async () => {
+    it('Valida se o produto atualizado está sendo retornado', async () => {
       const id = await ProductsModel.update(mocks.updateProduct);
-      expect(id).to.be.equal(1);
+      expect(id).to.be.equal(2);
     });
   });
 
