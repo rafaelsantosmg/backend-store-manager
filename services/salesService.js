@@ -24,6 +24,7 @@ const destroyer = async ({ id }) => {
   const findSaleId = await SalesModel.getFindId(id);
   if (findSaleId !== undefined && findSaleId.length === 0) return [];
   await SalesModel.destroyer({ id });
+  return id;
 };
 
 module.exports = {
