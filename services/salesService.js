@@ -12,12 +12,11 @@ const getById = async (id) => {
 };
 
 const create = async (sales) => {
+  const [product] = await ProductsModel.getById(sales[0].productId);
+  if (product.quantity <= sales[0].quantity) return [];
+  product.quantity -= sales[0].quantity;
+  await ProductsModel.update(product);
   const createSale = SalesModel.create(sales);
-  sales.forEach(async (sale) => {
-    const [product] = await ProductsModel.getById(sale.productId);
-    product.quantity -= sale.quantity;
-    await ProductsModel.update(product);
-  });
   return createSale;
 };
 
