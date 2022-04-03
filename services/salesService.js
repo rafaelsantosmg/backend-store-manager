@@ -16,7 +16,7 @@ const create = async (sales) => {
   if (product.quantity <= sales[0].quantity) return [];
   product.quantity -= sales[0].quantity;
   await ProductsModel.update(product);
-  const createSale = SalesModel.create(sales);
+  const createSale = await SalesModel.create(sales);
   return createSale;
 };
 

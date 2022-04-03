@@ -8,15 +8,15 @@ const mocks = require('../helpers/mocks');
 describe('Service - Rota "/sales"', () => {
   describe('Valida a função create', () => {
     before(() => {
-      sinon.stub(salesModel, 'create').resolves(mocks.sale);
-      sinon.stub(ProductsModel, 'getById').resolves(mocks.getProductById);
+      sinon.stub(ProductsModel, 'getById').resolves([mocks.getProductById]);
       sinon.stub(ProductsModel, 'update').resolves(1);
+      sinon.stub(salesModel, 'create').resolves(mocks.sale);
     })
   
     after(() => {
-      salesModel.create.restore();
       ProductsModel.getById.restore();
       ProductsModel.update.restore();
+      salesModel.create.restore();
     })
 
     it('Valida se cria a venda', async () => {
