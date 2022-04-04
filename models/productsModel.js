@@ -31,7 +31,7 @@ const getById = async (id) => {
   return product;
 };
 
-const create = async ({ name, quantity }) => {
+const create = async (name, quantity) => {
   const [{ insertId }] = await connection.execute(`
   INSERT INTO products (name, quantity)
   VALUES (?, ?)`,
@@ -47,7 +47,7 @@ const update = async ({ name, quantity, id }) => {
   [name, quantity, id]);
 };
 
-const destroyer = async ({ id }) => {
+const destroyer = async (id) => {
   await connection.execute(`
   DELETE FROM products
   WHERE id = ?`,

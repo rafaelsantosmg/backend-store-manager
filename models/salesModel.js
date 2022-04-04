@@ -17,11 +17,7 @@ const serializeById = (data) => (
 
 const getFindId = async (id) => {
   const [saleId] = await connection.execute(`
-  SELECT id FROM sales
-  WHERE id = ?`,
-    [id]);
-  await connection.execute(`
-  SELECT sale_id FROM sales_products
+  SELECT sale_id AS saleId FROM sales_products
   WHERE sale_id = ?`,
   [id]);
   return saleId;
@@ -46,7 +42,7 @@ const getById = async (id) => {
   WHERE s.id = ?
   ORDER BY sp.sale_id, sp.product_id;
   `,
-    [id]);
+  [id]);
   return sale.map(serializeById);
 };
 
@@ -67,7 +63,7 @@ const create = async (sales) => {
   };
 };
 
-const update = async ({ id, productId, quantity }) => {
+const update = async (id, productId, quantity) => {
   await connection.execute(`
   UPDATE sales SET date = NOW()
   WHERE id = ?`,
@@ -77,13 +73,9 @@ const update = async ({ id, productId, quantity }) => {
   SET product_id = ?, quantity = ?
   WHERE sale_id = ?`,
   [productId, quantity, id]);
-  return {
-    saleId: id,
-    itemUpdated: [{ productId, quantity }],
-  };
 };
 
-const destroyer = async ({ id }) => {
+const destroyer = async (id) => {
   await connection.execute(`
   DELETE FROM sales_products
   WHERE sale_id = ?`,
@@ -92,7 +84,6 @@ const destroyer = async ({ id }) => {
   DELETE FROM sales
   WHERE id = ?`,
   [id]);
-  return id;
 };
 
 module.exports = {
