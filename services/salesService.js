@@ -8,34 +8,48 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const sale = await SalesModel.getById(id);
+  if (!sale || sale.length === 0) throw Error('Sale not found');
   return sale;
 };
 
 const create = async (sales) => {
-  const [product] = await ProductsModel.getById(sales[0].productId);
-  if (product.quantity <= sales[0].quantity) return [];
-  product.quantity -= sales[0].quantity;
-  await ProductsModel.update(product);
+  await Promise.all(sales.map(async (sale) => {
+    const [product] = await ProductsModel.getById(sale.productId);
+    if (product.quantity < sale.quantity) {
+      throw Error('Such amount is not permitted to sell');
+    }
+    product.quantity -= sale.quantity;
+    await ProductsModel.update(product);
+  }));
   const createSale = await SalesModel.create(sales);
   return createSale;
 };
 
-const update = async ({ id, productId, quantity }) => {
-  const sale = SalesModel.update({ id, productId, quantity });
-  return sale;
+const update = async (id, sales) => {
+  const findSaleId = await SalesModel.getFindId(id);
+  if (!findSaleId) throw Error('Sale not found');
+  const itemUpdated = await Promise.all(sales.map(async (sale) => {
+    await SalesModel.update(id, sale.productId, sale.quantity);
+    return { productId: sale.productId, quantity: sale.quantity };
+  }));
+  return {
+    saleId: id,
+    itemUpdated,
+  };
 };
 
-const destroyer = async ({ id }) => {
-  const findSaleId = await SalesModel.getFindId(id);
-  if (findSaleId !== undefined && findSaleId.length === 0) return [];
+const destroyer = async (id) => {
+  const [findSale] = await SalesModel.getFindId(id);
+  if (!findSale || !findSale.saleId) {
+    throw Error('Sale not found');
+  }
   const sales = await SalesModel.getById(id);
-  sales.forEach(async (sale) => {
+  await Promise.all(sales.map(async (sale) => {
     const [product] = await ProductsModel.getById(sale.productId);
     product.quantity += sale.quantity;
     await ProductsModel.update(product);
-  });
-  await SalesModel.destroyer({ id });
-  return id;
+  }));
+  await SalesModel.destroyer(id);
 };
 
 module.exports = {

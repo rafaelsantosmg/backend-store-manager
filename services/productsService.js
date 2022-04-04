@@ -11,16 +11,16 @@ const getById = async (id) => {
   return product;
 };
 
-const create = async ({ name, quantity }) => {
+const create = async (name, quantity) => {
   const [findProduct] = await ProductsModel.getFindName(name);
   if (findProduct) throw Error('Product already exists');
-  const insertId = await ProductsModel.create({ name, quantity });
+  const insertId = await ProductsModel.create(name, quantity);
   return insertId;
 };
 
 const update = async (name, quantity, id) => {
   const findProductId = await ProductsModel.getFindId(id);
-  if (findProductId !== undefined && findProductId.length === 0) {
+  if (!findProductId || findProductId.length === 0) {
     throw Error('Product not found');
   }
   await ProductsModel.update({ name, quantity, id });
@@ -29,10 +29,10 @@ const update = async (name, quantity, id) => {
 
 const destroyer = async (id) => {
   const findProductId = await ProductsModel.getFindId(id);
-  if (findProductId !== undefined && findProductId.length === 0) {
+  if (!findProductId || findProductId.length === 0) {
     throw Error('Product not found');
   }
-  await ProductsModel.destroyer({ id });
+  await ProductsModel.destroyer(id);
 };
 
 module.exports = {
