@@ -18,7 +18,7 @@ const create = async ({ name, quantity }) => {
   return insertId;
 };
 
-const update = async ({ name, quantity, id }) => {
+const update = async (name, quantity, id) => {
   const findProductId = await ProductsModel.getFindId(id);
   if (findProductId !== undefined && findProductId.length === 0) {
     throw Error('Product not found');
@@ -27,7 +27,7 @@ const update = async ({ name, quantity, id }) => {
   return [{ id, name, quantity }];
 };
 
-const destroyer = async ({ id }) => {
+const destroyer = async (id) => {
   const findProductId = await ProductsModel.getFindId(id);
   if (findProductId !== undefined && findProductId.length === 0) {
     throw Error('Product not found');

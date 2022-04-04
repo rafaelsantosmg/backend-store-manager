@@ -45,15 +45,13 @@ const update = async ({ name, quantity, id }) => {
   SET name = ?, quantity = ?
   WHERE id = ?`,
   [name, quantity, id]);
-  return id;
 };
 
 const destroyer = async ({ id }) => {
-  const [product] = await connection.execute(`
+  await connection.execute(`
   DELETE FROM products
   WHERE id = ?`,
   [id]);
-  return product;
 };
 
 module.exports = {
