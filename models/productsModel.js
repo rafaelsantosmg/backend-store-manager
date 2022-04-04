@@ -32,11 +32,11 @@ const getById = async (id) => {
 };
 
 const create = async ({ name, quantity }) => {
-  const [product] = await connection.execute(`
+  const [{ insertId }] = await connection.execute(`
   INSERT INTO products (name, quantity)
   VALUES (?, ?)`,
   [name, quantity]);
-  return product;
+  return insertId;
 };
 
 const update = async ({ name, quantity, id }) => {

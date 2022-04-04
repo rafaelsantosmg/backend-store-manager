@@ -14,8 +14,8 @@ const getById = async (id) => {
 const create = async ({ name, quantity }) => {
   const [findProduct] = await ProductsModel.getFindName(name);
   if (findProduct) throw Error('Product already exists');
-  const { insertId } = await ProductsModel.create({ name, quantity });
-  return [insertId];
+  const insertId = await ProductsModel.create({ name, quantity });
+  return insertId;
 };
 
 const update = async ({ name, quantity, id }) => {
