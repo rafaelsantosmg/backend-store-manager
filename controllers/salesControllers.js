@@ -6,37 +6,43 @@ const getAll = async (_req, res) => {
 };
 
 const getById = async (req, res) => {
-  const { id } = req.params;
-  const sale = await SalesService.getById(Number(id));
-  if (sale === undefined || sale.length === 0) {
-    return res.status(404).json({ message: 'Sale not found' });
+  try {
+    const { id } = req.params;
+    const sale = await SalesService.getById(Number(id));
+    return res.status(200).json(sale);
+  } catch (error) {
+    return res.status(404).json({ message: error.message }); 
   }
-  return res.status(200).json(sale);
 };
 
 const create = async (req, res) => {
-  const sale = await SalesService.create(req.body);
-  if (sale !== undefined && sale.length === 0) {
-    return res.status(422).json({ message: 'Such amount is not permitted to sell' });
+  try {
+    const sale = await SalesService.create(req.body);
+    return res.status(201).json(sale);
+  } catch (error) {
+    return res.status(422).json({ message: error.message }); 
   }
-  return res.status(201).json(sale);
 };
 
 const update = async (req, res) => {
-  const { id } = req.params;
-  const { productId, quantity } = req.body[0];
-  const sale = await SalesService
-    .update({ id: Number(id), productId, quantity });
-  return res.status(200).json(sale);
+  try {
+    const { id } = req.params;
+    const sale = await SalesService
+      .update(Number(id), req.body);
+    return res.status(200).json(sale);
+  } catch (error) {
+    return res.status(409).json({ message: error.message });
+  }
 };
 
 const destroyer = async (req, res) => {
-  const { id } = req.params;
-  const sale = await SalesService.destroyer({ id: Number(id) });
-  if (sale !== undefined && sale.length === 0) {
-    return res.status(404).json({ message: 'Sale not found' });
+  try {
+    const { id } = req.params;
+    await SalesService.destroyer(Number(id));
+    return res.status(204).end();
+  } catch (error) {
+    return res.status(404).json({ message: error.message }); 
   }
-  return res.status(204).end();
 };
 
 module.exports = {

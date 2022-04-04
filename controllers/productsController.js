@@ -18,7 +18,7 @@ const getById = async (req, res) => {
 const create = async (req, res) => {
   try {
     const { name, quantity } = req.body;
-    const id = await ProductsService.create({ name, quantity });
+    const id = await ProductsService.create(name, quantity);
     return res.status(201).json({ id, name, quantity });
   } catch (error) {
     return res.status(409).json({ message: error.message });
