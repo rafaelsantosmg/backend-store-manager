@@ -6,45 +6,29 @@ const getAll = async (_req, res) => {
 };
 
 const getById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = await ProductsService.getById(Number(id));
-    return res.status(200).json(product);
-  } catch (error) {
-    return res.status(404).json({ message: error.message });
-  }
+  const { id } = req.params;
+  const product = await ProductsService.getById(Number(id));
+  return res.status(200).json(product);
 };
 
 const create = async (req, res) => {
-  try {
-    const { name, quantity } = req.body;
-    const id = await ProductsService.create(name, quantity);
-    return res.status(201).json({ id, name, quantity });
-  } catch (error) {
-    return res.status(409).json({ message: error.message });
-  }
+  const { name, quantity } = req.body;
+  const id = await ProductsService.create(name, quantity);
+  return res.status(201).json({ id, name, quantity });
 };
 
 const update = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { name, quantity } = req.body;
-    const product = await ProductsService
-      .update(name, quantity, Number(id));
-    return res.status(200).json(product[0]);
-  } catch (error) {
-    return res.status(404).json({ message: error.message });
-  }
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const product = await ProductsService
+    .update(name, quantity, Number(id));
+  return res.status(200).json(product[0]);
 };
 
 const destroyer = async (req, res) => {
-  try {
-    const { id } = req.params;
-    await ProductsService.destroyer(Number(id));
-    return res.status(204).end();
-  } catch (error) {
-    return res.status(404).json({ message: error.message });
-  }
+  const { id } = req.params;
+  await ProductsService.destroyer(Number(id));
+  return res.status(204).end();
 };
 
 module.exports = {

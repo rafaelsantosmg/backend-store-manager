@@ -1,4 +1,5 @@
 const ProductsModel = require('../models/productsModel');
+const errorsMiddleware = require('../middlewares/errorsMiddleware');
 
 const getAll = async () => {
   const products = await ProductsModel.getAll();
@@ -7,13 +8,13 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const [product] = await ProductsModel.getById(id);
-  if (!product) throw Error('Product not found');
+  if (!product) throw errorsMiddleware(404, 'Product not found');
   return product;
 };
 
 const create = async (name, quantity) => {
   const [findProduct] = await ProductsModel.getFindName(name);
-  if (findProduct) throw Error('Product already exists');
+  if (findProduct) throw errorsMiddleware(409, 'Product already exists');
   const insertId = await ProductsModel.create(name, quantity);
   return insertId;
 };
@@ -21,7 +22,7 @@ const create = async (name, quantity) => {
 const update = async (name, quantity, id) => {
   const findProductId = await ProductsModel.getFindId(id);
   if (!findProductId || findProductId.length === 0) {
-    throw Error('Product not found');
+    throw errorsMiddleware(404, 'Product not found');
   }
   await ProductsModel.update({ name, quantity, id });
   return [{ id, name, quantity }];
@@ -30,7 +31,7 @@ const update = async (name, quantity, id) => {
 const destroyer = async (id) => {
   const findProductId = await ProductsModel.getFindId(id);
   if (!findProductId || findProductId.length === 0) {
-    throw Error('Product not found');
+    throw errorsMiddleware(404, 'Product not found');
   }
   await ProductsModel.destroyer(id);
 };
