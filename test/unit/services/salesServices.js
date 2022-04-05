@@ -76,11 +76,11 @@ describe('Service - Rota "/sales"', () => {
 
   describe('Valida se produto é deletado!', () => {
     before(() => {
-      sinon.stub(salesModel, 'getFindId').resolves(1);
+      sinon.stub(salesModel, 'getFindId').resolves([{ saleId: 1 }]);
       sinon.stub(salesModel, 'getById').resolves(mocks.getFindById);
       sinon.stub(ProductsModel, 'getById').resolves([mocks.getProductById]);
-      sinon.stub(ProductsModel, 'update').resolves(mocks.updateProduct);
-      sinon.stub(salesModel, 'destroyer').resolves();
+      sinon.stub(ProductsModel, 'update').resolves();
+      sinon.stub(salesModel, 'destroyer').resolves(undefined);
     })
   
     after(() => {
@@ -92,8 +92,8 @@ describe('Service - Rota "/sales"', () => {
     })
   
     it('Valida se deleta o produto', async () => {
-      const result = await salesModel.destroyer(1);
-      expect(result).to.deep.equal(undefined);
+      const result = await salesService.destroyer(1);
+      expect(result).to.deep.equal(1);
     });
   });
 });

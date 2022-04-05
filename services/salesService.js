@@ -44,13 +44,14 @@ const destroyer = async (id) => {
   if (!findSale || !findSale.saleId) {
     throw errorsMiddleware(404, 'Sale not found');
   }
-  const sales = await SalesModel.getById(id);
-  await Promise.all(sales.map(async (sale) => {
-    const [product] = await ProductsModel.getById(sale.productId);
-    product.quantity += sale.quantity;
-    await ProductsModel.update(product);
-  }));
+  // const sales = await SalesModel.getById(id);
+  // await Promise.all(sales.map(async (sale) => {
+  //   const [product] = await ProductsModel.getById(sale.productId);
+  //   product.quantity += sale.quantity;
+  //   await ProductsModel.update(product);
+  // }));
   await SalesModel.destroyer(id);
+  return id;
 };
 
 module.exports = {
