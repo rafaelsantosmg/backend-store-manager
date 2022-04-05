@@ -40,7 +40,7 @@ describe("Sales Model", () => {
     });
     it('Valida se a venda foi atualizada', async () => {
       const result = await SalesModel.update(mocks.updateSale);
-      expect(result).to.deep.equal(mocks.salesDBUpdate);
+      expect(result).to.deep.equal(undefined);
     });
   });
 
@@ -52,8 +52,8 @@ describe("Sales Model", () => {
       connection.execute.restore();
     });
     it('Valida se produto foi deletado', async () => {
-      const id = await SalesModel.destroyer({ id: 1 });
-      expect(id).to.be.equal(1);
+      const result = await SalesModel.destroyer(1);
+      expect(result).to.be.equal(undefined);
     });
   });
 

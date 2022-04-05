@@ -13,7 +13,7 @@ describe("Products Model", () => {
       connection.execute.restore();
     });
     it("Valida se produto foi inserido", async () => {
-      const { insertId } = await ProductsModel.create(mocks.createProduct);
+      const insertId = await ProductsModel.create(mocks.createProduct);
       expect(insertId).to.be.equal(1);
     });
   });
@@ -33,27 +33,27 @@ describe("Products Model", () => {
 
   describe('Atualiza um produtos', () => {
     before(() => {
-      sinon.stub(connection, 'execute').resolves([mocks.updateProduct]);
+      sinon.stub(connection, 'execute').resolves();
     });
     after(() => {
       connection.execute.restore();
     });
     it('Valida se o produto atualizado está sendo retornado', async () => {
-      const id = await ProductsModel.update(mocks.updateProduct);
-      expect(id).to.be.equal(2);
+      const result = await ProductsModel.update(mocks.updateProduct);
+      expect(result).to.be.equal(undefined);
     });
   });
 
   describe('Deleta um produtos', () => {
     before(() => {
-      sinon.stub(connection, 'execute').resolves([mocks.deleteProducts]);
+      sinon.stub(connection, 'execute').resolves();
     });
     after(() => {
       connection.execute.restore();
     });
     it('Valida se produto foi deletado corretamente', async () => {
-      const id = await ProductsModel.destroyer({ id: 1 });
-      expect(id).to.be.equal(1);
+      const result = await ProductsModel.destroyer({ id: 1 });
+      expect(result).to.be.equal(undefined);
     });
   });
 

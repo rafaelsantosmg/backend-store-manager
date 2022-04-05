@@ -56,7 +56,6 @@ describe('Testa os controllers da rota /Sales', () => {
     });
   
     describe('Testa se houve rejeição na requisição getById', () => {
-      const error = { status: 404, message: 'Sale not found' };
       before(() => {
         sinon.stub(SalesService, 'getById').resolves([]);
         res.status = sinon.stub().returns(res);
@@ -69,13 +68,19 @@ describe('Testa os controllers da rota /Sales', () => {
       });
   
       it('valida resposta HTTP status 404', async () => {
-        await SalesController.getById(req, res);
-        expect(res.status.calledWith(error.status)).to.be.equal(true);
+        try {
+          await SalesController.getById(req, res);
+        } catch (error) {
+          expect(error.status).to.be.equal(404);
+        }
       });
   
       it('valida se teve a resposta correta da mensagem de erro', async () => {
-        await SalesController.getById(req, res);
-        expect(res.json.calledWith({ message: error.message })).to.be.equal(true);
+        try {
+          await SalesController.getById(req, res);
+        } catch (error) {
+          expect(error.message).to.be.equals('Sale not found');
+        }
       });
     });
   });
@@ -131,7 +136,7 @@ describe('Testa os controllers da rota /Sales', () => {
 
     describe('Testa se houve sucesso na requisição delete', () => {
       before(() => {
-        sinon.stub(SalesService, 'destroyer').resolves(mocks.deleteSale);
+        sinon.stub(SalesService, 'destroyer').resolves();
         res.status = sinon.stub().returns(res)
         res.json = sinon.stub().returns(res)
         res.end = sinon.stub().returns(res);
@@ -149,11 +154,12 @@ describe('Testa os controllers da rota /Sales', () => {
     });
   
     describe('Testa se houve rejeição na requisição delete', () => {
-      const error = { status: 404, message: 'Sale not found' };
       before(() => {
-        sinon.stub(SalesService, 'destroyer').resolves([]);
+        sinon.stub(SalesService, 'destroyer').resolves();
         res.status = sinon.stub().returns(res);
         res.json = sinon.stub().returns(res);
+        res.end = sinon.stub().returns(res);
+        req.params = sinon.stub().returns({ id: 8 });
       });
   
       after(() => {
@@ -161,13 +167,19 @@ describe('Testa os controllers da rota /Sales', () => {
       });
   
       it('valida resposta HTTP status 404', async () => {
-        await SalesController.destroyer(req, res);
-        expect(res.status.calledWith(error.status)).to.be.equal(true);
+        try {
+          await SalesController.destroyer(req, res);
+        } catch (error) {
+          expect(error.status).to.be.equal(404);
+        }
       });
   
       it('valida se teve a resposta correta da mensagem de erro', async () => {
-        await SalesController.destroyer(req, res);
-        expect(res.json.calledWith({ message: error.message })).to.be.equal(true);
+        try {
+          await SalesController.destroyer(req, res);
+        } catch (error) {
+          expect(error.message).to.be.equals('Sale not found');
+        }
       });
     });
   });

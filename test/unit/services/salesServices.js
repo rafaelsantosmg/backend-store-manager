@@ -9,7 +9,7 @@ describe('Service - Rota "/sales"', () => {
   describe('Valida a função create', () => {
     before(() => {
       sinon.stub(ProductsModel, 'getById').resolves([mocks.getProductById]);
-      sinon.stub(ProductsModel, 'update').resolves(1);
+      sinon.stub(ProductsModel, 'update').resolves();
       sinon.stub(salesModel, 'create').resolves(mocks.sale);
     })
   
@@ -57,64 +57,43 @@ describe('Service - Rota "/sales"', () => {
   });
 
   describe('Valida a função update', () => {
+    const { id, sales } = mocks.updateSale;
     before(() => {
-      sinon.stub(salesModel, 'update').resolves(mocks.salesDBUpdate);
+      sinon.stub(salesModel, 'getFindId').resolves(1)
+      sinon.stub(salesModel, 'update').resolves();
     })
   
     after(() => {
+      salesModel.getFindId.restore();
       salesModel.update.restore();
     })
   
     it('Valida se atualiza o produto', async () => {
-      const result = await salesService.update(mocks.updateSale);
+      const result = await salesService.update(id, sales);
       expect(result).to.deep.equal(mocks.salesDBUpdate);
     });
   });
 
-  describe('Valida a função delete', () => {
-    describe('Valida se existe um produto com mesmo id', () => {
-      before(() => {
-        sinon.stub(salesModel, 'destroyer').resolves(mocks.deleteSale);
-        sinon.stub(salesModel, 'getFindId').resolves(mocks.deleteSale);
-        sinon.stub(salesModel, 'getById').resolves(mocks.getFindById);
-        sinon.stub(ProductsModel, 'getById').resolves(mocks.getProductById);
-        sinon.stub(ProductsModel, 'update').resolves(1);
-      })
-    
-      after(() => {
-        salesModel.destroyer.restore();
-        salesModel.getFindId.restore();
-        salesModel.getById.restore();
-        ProductsModel.getById.restore();
-        ProductsModel.update.restore();
-      })
-    
-      it('Valida se id ja existe', async () => {
-        const id = await salesService.destroyer({ id: 1 });
-        expect(id).to.deep.equal(mocks.deleteProducts);
-      });
-    });
-    describe('Valida se produto é deletado!', () => {
-      before(() => {
-        sinon.stub(salesModel, 'destroyer').resolves(mocks.deleteProducts);
-        sinon.stub(salesModel, 'getFindId').resolves(mocks.deleteSale);
-        sinon.stub(salesModel, 'getById').resolves(mocks.getFindById);
-        sinon.stub(ProductsModel, 'getById').resolves(mocks.getProductById);
-        sinon.stub(ProductsModel, 'update').resolves(1);
-      })
-    
-      after(() => {
-        salesModel.destroyer.restore();
-        salesModel.getFindId.restore();
-        salesModel.getById.restore();
-        ProductsModel.getById.restore();
-        ProductsModel.update.restore();
-      })
-    
-      it('Valida se deleta o produto', async () => {
-        const id = await salesService.destroyer({ id: 1 });
-        expect(id).to.deep.equal(mocks.deleteSale);
-      });
+  describe('Valida se produto é deletado!', () => {
+    before(() => {
+      sinon.stub(salesModel, 'getFindId').resolves(1);
+      sinon.stub(salesModel, 'getById').resolves(mocks.getFindById);
+      sinon.stub(ProductsModel, 'getById').resolves([mocks.getProductById]);
+      sinon.stub(ProductsModel, 'update').resolves(mocks.updateProduct);
+      sinon.stub(salesModel, 'destroyer').resolves();
+    })
+  
+    after(() => {
+      salesModel.destroyer.restore();
+      salesModel.getFindId.restore();
+      salesModel.getById.restore();
+      ProductsModel.getById.restore();
+      ProductsModel.update.restore();
+    })
+  
+    it('Valida se deleta o produto', async () => {
+      const result = await salesModel.destroyer(1);
+      expect(result).to.deep.equal(undefined);
     });
   });
 });

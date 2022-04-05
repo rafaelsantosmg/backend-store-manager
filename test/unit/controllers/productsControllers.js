@@ -56,9 +56,8 @@ describe('Testa os controllers da rota /Products', () => {
     });
   
     describe('Testa se houve rejeição na requisição getById', () => {
-      const error = { status: 404, message: 'Product not found' };
       before(() => {
-        sinon.stub(ProductsService, 'getById').resolves([]);
+        sinon.stub(ProductsService, 'getById').resolves();
         res.status = sinon.stub().returns(res);
         res.json = sinon.stub().returns(res);
         req.params = sinon.stub().returns({ id: 8 });
@@ -69,13 +68,19 @@ describe('Testa os controllers da rota /Products', () => {
       });
   
       it('valida resposta HTTP status 404', async () => {
-        await ProductsController.getById(req, res);
-        expect(res.status.calledWith(error.status)).to.be.equal(true);
+        try {
+          await ProductsController.getById(req, res);
+        } catch (error) {
+          expect(error.status).to.be.equal(404);
+        }
       });
   
       it('valida se teve a resposta correta da mensagem de erro', async () => {
-        await ProductsController.getById(req, res);
-        expect(res.json.calledWith({ message: error.message })).to.be.equal(true);
+        try {
+          await ProductsController.getById(req, res);
+        } catch (error) {
+          expect(error.message).to.be.equals('Product not found');
+        }
       });
     });
   });
@@ -86,7 +91,7 @@ describe('Testa os controllers da rota /Products', () => {
 
     describe('Testa se houve sucesso na requisição create', () => {
       before(() => {
-        sinon.stub(ProductsService, 'create').resolves([1]);
+        sinon.stub(ProductsService, 'create').resolves(1);
         res.status = sinon.stub().returns(res)
         res.json = sinon.stub().returns(res)
         req.body = mocks.createProduct;
@@ -107,11 +112,11 @@ describe('Testa os controllers da rota /Products', () => {
     });
   
     describe('Testa se houve rejeição na requisição create', () => {
-      const error = { status: 409, message: 'Product already exists' };
       before(() => {
-        sinon.stub(ProductsService, 'create').resolves([]);
+        sinon.stub(ProductsService, 'create').resolves(1);
         res.status = sinon.stub().returns(res);
         res.json = sinon.stub().returns(res);
+        req.body = mocks.createProduct;
       });
   
       after(() => {
@@ -119,13 +124,19 @@ describe('Testa os controllers da rota /Products', () => {
       });
   
       it('valida resposta HTTP status 409', async () => {
-        await ProductsController.create(req, res);
-        expect(res.status.calledWith(error.status)).to.be.equal(true);
+        try {
+          await ProductsController.create(req, res);
+        } catch (error) {
+          expect(error.status).to.be.equal(409);
+        }
       });
   
       it('valida se teve a resposta correta da mensagem de erro', async () => {
-        await ProductsController.create(req, res);
-        expect(res.json.calledWith({ message: error.message })).to.be.equal(true);
+        try {
+          await ProductsController.create(req, res);
+        } catch (error) {
+          expect(error.message).to.be.equals('Product already exists');
+        }
       });
     });
   });
@@ -158,11 +169,12 @@ describe('Testa os controllers da rota /Products', () => {
     });
   
     describe('Testa se houve rejeição na requisição update', () => {
-      const error = { status: 404, message: 'Product not found' };
       before(() => {
-        sinon.stub(ProductsService, 'update').resolves([]);
+        sinon.stub(ProductsService, 'update').resolves([mocks.updateProduct]);
         res.status = sinon.stub().returns(res);
         res.json = sinon.stub().returns(res);
+        req.params = sinon.stub().returns({ id: 2 });
+        req.body = mocks.updateProductReq;
       });
   
       after(() => {
@@ -170,13 +182,19 @@ describe('Testa os controllers da rota /Products', () => {
       });
   
       it('valida resposta HTTP status 404', async () => {
-        await ProductsController.update(req, res);
-        expect(res.status.calledWith(error.status)).to.be.equal(true);
+        try {
+          await ProductsController.update(req, res);
+        } catch (error) {
+          expect(error.status).to.be.equal(404);
+        }
       });
   
       it('valida se teve a resposta correta da mensagem de erro', async () => {
-        await ProductsController.update(req, res);
-        expect(res.json.calledWith({ message: error.message })).to.be.equal(true);
+        try {
+          await ProductsController.update(req, res);
+        } catch (error) { 
+          expect(error.message).to.be.equals('Product not found');
+        }
       });
     });
   });
@@ -187,7 +205,7 @@ describe('Testa os controllers da rota /Products', () => {
 
     describe('Testa se houve sucesso na requisição delete', () => {
       before(() => {
-        sinon.stub(ProductsService, 'destroyer').resolves(mocks.deleteProducts);
+        sinon.stub(ProductsService, 'destroyer').resolves();
         res.status = sinon.stub().returns(res)
         res.json = sinon.stub().returns(res)
         res.end = sinon.stub().returns(res);
@@ -205,11 +223,12 @@ describe('Testa os controllers da rota /Products', () => {
     });
   
     describe('Testa se houve rejeição na requisição delete', () => {
-      const error = { status: 404, message: 'Product not found' };
       before(() => {
-        sinon.stub(ProductsService, 'destroyer').resolves([]);
+        sinon.stub(ProductsService, 'destroyer').resolves();
         res.status = sinon.stub().returns(res);
         res.json = sinon.stub().returns(res);
+        res.end = sinon.stub().returns(res);
+        req.params = sinon.stub().returns({ id: 1 });
       });
   
       after(() => {
@@ -217,13 +236,19 @@ describe('Testa os controllers da rota /Products', () => {
       });
   
       it('valida resposta HTTP status 404', async () => {
-        await ProductsController.destroyer(req, res);
-        expect(res.status.calledWith(error.status)).to.be.equal(true);
+        try {
+          await ProductsController.destroyer(req, res);
+        } catch (error) {
+          expect(error.status).to.be.equal(404);
+        }
       });
   
       it('valida se teve a resposta correta da mensagem de erro', async () => {
-        await ProductsController.destroyer(req, res);
-        expect(res.json.calledWith({ message: error.message })).to.be.equal(true);
+        try {
+          await ProductsController.destroyer(req, res);
+        } catch (error) {
+          expect(error.message).to.be.equals('Product not found');
+        }
       });
     });
   });

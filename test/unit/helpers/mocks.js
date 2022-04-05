@@ -139,8 +139,12 @@ const updateSaleReq = [
 
 const updateSale = {
   id: 1,
-  productId: 1,
-  quantity: 6
+  sales: [
+    {
+      productId: 1,
+      quantity: 6
+    }
+  ],
 };
 
 const deleteSale = 1;
